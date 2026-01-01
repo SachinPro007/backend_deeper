@@ -1,6 +1,8 @@
 const http = require("http")
 const fs = require("fs")
+const { URLSearchParams } = require("url")
 const PORT = 3000
+const users = require("./users.json")
 
 
 const server = http.createServer((req, res) => {
@@ -29,7 +31,28 @@ const server = http.createServer((req, res) => {
     return res.end()
 
   }else if(req.url === "/submit-info" && req.method === "POST"){  
-    fs.writeFileSync("users.json", "Sachin Sehrawat")
+    const body = [];
+    req.on("data", (chunk) => {
+      console.log(chunk);
+      body.push(chunk)      
+    })
+    req.on("end", () => {      
+      const fullBody = Buffer.concat(body).toString()
+      console.log(fullBody);
+      
+      const params = new URLSearchParams(fullBody)
+      console.log(params);
+
+      // const bodyObj = {}
+      // for(const [key, value] of params.entries()){
+      //   bodyObj[key] = value
+      // }
+      const bodyObj = Object.fromEntries(params)
+      console.log(bodyObj);     
+      fs.writeFileSync("users.json", JSON.stringify(bodyObj))
+      
+    })
+
     res.statusCode = 302
     res.setHeader("location", "/")
     return
