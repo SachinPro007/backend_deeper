@@ -1,10 +1,12 @@
-const http = require("http")
+const http = require("http");
+const { logical } = require("./logical");
 
 const server = http.createServer((req, res) => {
-  console.log(req.url);
+  console.log(req.url, req.method);
 
-  res.setHeader("Content-Type", "text/html")
-  res.write("<div>sachin</div>")
+  // res.setHeader("Content-Type", "text/html")
+  // res.write("<div>sachin</div>")
+  logical()
   
 
 })
