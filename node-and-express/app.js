@@ -5,15 +5,24 @@ const PORT = 3000;
 
 // const app = express()
 
-app.use((req, res, next) => {
+app.use("/", (req, res, next) => {
   console.log("log in first middleware", req.url, req.method);
+  // res.send("<p>log in first middleware</p>")
   next()
 })
 
-app.use((req, res, next) => {
+app.post("/submit", (req, res, next) => {
   console.log("log in second middleware", req.url, req.method);
-  res.send("<p>Welcome to home page</p>")
+  res.send("<p>Welcome to submit page</p>")
 })
+
+app.use("/", (req, res, next) => {
+  console.log("log in another middleware", req.url, req.method);
+  res.send("<p>log in another middleware</p>")
+  next()
+})
+
+
 
 
 
