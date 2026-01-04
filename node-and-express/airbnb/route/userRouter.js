@@ -1,12 +1,10 @@
 const express = require('express')
 const userRouter = express.Router()
+const path = require('path')
 
 
 userRouter.get("/", (req, res, next) => {
-  res.send(`
-    <h1>Welcome to airbnb home page</h1>
-    <a href="/host/add-home" > add Home</a>  
-  `)
+  res.sendFile(path.join(__dirname, "../", "views", "home.html"))
 })
 
 

@@ -1,5 +1,8 @@
 const express = require('express')
 const parser = require('body-parser')
+const path = require('path')
+
+
 const userRouter = require('./route/userRouter')
 const hostRouter = require('./route/hostRouter')
 const PORT = 3000
@@ -17,6 +20,10 @@ app.use((req, res, next) => {
 
 app.use(userRouter)
 app.use("/host", hostRouter)
+
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, "views", "404.html"))
+})
 
 
 
