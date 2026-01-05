@@ -1,12 +1,18 @@
-const express = require('express')
-const parser = require('body-parser')
+// core module
 const path = require('path')
 
+// external module
+const express = require('express')
+const parser = require('body-parser')
 
+// local module
 const userRouter = require('./route/userRouter')
 const hostRouter = require('./route/hostRouter')
-const PORT = 3000
+const rootDir = require('./utils/pathUtil')
 
+
+
+const PORT = 3000
 const app = express()
 
 
@@ -22,7 +28,7 @@ app.use(userRouter)
 app.use("/host", hostRouter)
 
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "404.html"))
+  res.status(404).sendFile(path.join(rootDir, "views", "404.html"))
 })
 
 

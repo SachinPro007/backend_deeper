@@ -1,4 +1,11 @@
-const app = require('express')()
+const express = require('express')
+const path = require("path")
+
+const rootDir = require("./utils/pathUtil")
+const contactRouter = require('./route/contactRoute');
+const userRouter = require('./route/userRouter');
+
+const app = express()
 const PORT = 3000
 
 
@@ -14,31 +21,15 @@ app.use("/", (req, res, next) => {
   next()
 })
 
+// parse the body
+app.use(express.urlencoded())
 
-app.get("/", (req, res, next) => {
-  console.log("log in home page response middleware");
-  return res.send(`<div><h1>Welcome to home page</h1> <a href=${"/contact"}>Contact page</a><div>`)
+app.use(userRouter)
+app.use("/contact", contactRouter)
 
 
-})
-
-app.get("/contact", (req, res, next) => {
-  console.log("log in contact page on get method");
-  res.send(`<div>
-    <form action="/contact" method='POST'>
-      <input type='text' name='username' placeholder='Enter your username'/>
-      <input type='email' name='email' placeholder='Enter your email'/>
-
-      <button type='submit'>Submit</button>
-    </form>
-  </div>`)  
-})
-
-app.post("/contact", (req, res, next) => {
-  console.log("log in contact page on Post method");
-  console.log(req.body);
-
-  res.send(`<div>I got you details successfully</div>`) 
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(rootDir, "views", "404.html"))
 })
 
 
