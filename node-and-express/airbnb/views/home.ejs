@@ -1,0 +1,30 @@
+<%- include("partials/head") %>
+</head>
+
+<body>
+  <%- include("partials/header") %>
+  
+  <main>
+    
+    <a href="/host/add-home"> add Home</a>
+
+    <div>
+      <h2>Here is home list</h2>
+      <ul>
+        <% if(homes.length !==0) { %>
+          <% homes.forEach((home)=> { %>
+            <li>
+              <%= home.houseName %>
+            </li>
+
+          <% })%>
+
+        <% } %>
+      </ul>
+    </div>
+  </main>
+  <footer></footer>
+
+</body>
+
+</html>
