@@ -1,22 +1,11 @@
 const hostRouter = require('express').Router()
-const path = require('path')
+// const path = require('path')
 
-const rootDir = require('../utils/pathUtil')
+// const rootDir = require('../utils/pathUtil')
+const { getAddHome, postAddHome } = require('../controllers/homes')
 
-
-hostRouter.get("/add-home", (req, res, next) => {
-  res.render("addHome", {pageTitle: "Home input page"})
-})
-
+hostRouter.get("/add-home", getAddHome)
+hostRouter.post("/add-home", postAddHome)
 
 
-const homes = []
-hostRouter.post("/add-home", (req, res, next) => {
-  console.log(req.body);  
-  homes.push(req.body)
-  res.render("homeAdd", {pageTitle: "Home Added Success"})
-})
-
-
-
-module.exports = {hostRouter, homes}
+module.exports = { hostRouter }

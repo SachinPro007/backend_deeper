@@ -3,12 +3,13 @@ const path = require('path')
 
 // external module
 const express = require('express')
-const parser = require('body-parser')
+// const parser = require('body-parser')
 
 // local module
 const userRouter = require('./route/userRouter')
 const {hostRouter} = require('./route/hostRouter')
 const rootDir = require('./utils/pathUtil')
+const { pageNotFound } = require('./controllers/error')
 
 
 
@@ -30,9 +31,7 @@ app.use((req, res, next) => {
 app.use(userRouter)
 app.use("/host", hostRouter)
 
-app.use((req, res, next) => {
-  res.render("404", {pageTitle: '404 Page not found'})
-})
+app.use(pageNotFound)
 
 
 
