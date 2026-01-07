@@ -23,16 +23,15 @@ app.set("views", "views")
 app.use(express.urlencoded())
 app.use(express.static(path.join(rootDir, "public")))
 
-app.use((req, res, next) => {
-  console.log(req.url, req.method);
-  next()
-})
+// app.use((req, res, next) => {
+//   console.log(req.url, req.method);
+//   next()
+// })
 
 app.use(userRouter)
 app.use("/host", hostRouter)
 
 app.use(pageNotFound)
-
 
 
 app.listen(PORT, () => {

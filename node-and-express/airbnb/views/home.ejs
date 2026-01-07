@@ -11,7 +11,7 @@
     <div>
       <h2>Here is home list</h2>
       <ul>
-        <% if(homes.length !==0) { %>
+        <% if(homes && homes.length !==0) { %>
           <% homes.forEach((home)=> { %>
             <li>
               <%= home.houseName %>
