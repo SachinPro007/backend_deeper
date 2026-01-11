@@ -67,7 +67,11 @@
                                                 <span class="text-gray-500 text-sm font-normal">/ night</span>
                                             </div>
 
-                                            <button class="bg-blue-600 text-white font-medium text-sm rounded-lg px-3 py-2">Book</button>
+                                            <div>
+                                                <a href="/homes/<%= home.id %>" class="bg-blue-600 text-white font-medium text-sm rounded-lg px-3 py-2">Detail</a>
+
+                                                <%- include("../partials/favourite", {home: home}) %>
+                                            </div>
                                         </div>
                                     </div>
 

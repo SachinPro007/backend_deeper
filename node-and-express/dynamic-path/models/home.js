@@ -3,6 +3,8 @@ const path = require('path')
 
 const rootDir = require('../utils/pathUtil')
 
+const fileDataPath = path.join(rootDir, "data", "homes.json")
+
 
 
 class Home {
@@ -15,26 +17,32 @@ class Home {
   }
 
   save() {
-    Home.fatchAll((homes) => {
-
-      const filePath = path.join(rootDir, "data", "homes.json")
+    this.id = Math.random().toString();
+    Home.fetchAll((homes) => {      
       homes.push(this)
   
-      fs.writeFile(filePath, JSON.stringify(homes), (err) => {
+      fs.writeFile(fileDataPath, JSON.stringify(homes), (err) => {
         console.log(err);  
       })
 
     })
-
   }
 
-  static fatchAll(callBack) {
-    const filePath = path.join(rootDir, "data", "homes.json")
-    fs.readFile(filePath, (err, data) => {
+  static fetchAll(callBack) {
+    fs.readFile(fileDataPath, (err, data) => {
       callBack(!err ? JSON.parse(data) : [])
     })
 
   }
+
+  static findById (homeId, callBack) {
+    Home.fetchAll((homes) => {
+      const matchedHome = homes.find(home => home.id === homeId)
+      callBack(matchedHome)
+    })
+  }
+
+  
 }
 
 module.exports = Home
