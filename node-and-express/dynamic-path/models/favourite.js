@@ -25,12 +25,12 @@ class Favourite {
       callBack(!err ? JSON.parse(data) : [])
     })
   }
-
-  static removeFavourite (id, callBack){
-    Favourite.getFavourites((favouriteHomes) => {
-      favouriteHomes = favouriteHomes.filter(homeId => homeId !== id)
+ 
+  static deleteById (id, callBack){
+    Favourite.getFavourites((favouriteHomeIds) => {
+      favouriteHomeIds = favouriteHomeIds.filter(homeId => homeId !== id)
       
-      fs.writeFile(fileDataPath, JSON.stringify(favouriteHomes), callBack)
+      fs.writeFile(fileDataPath, JSON.stringify(favouriteHomeIds), callBack)
     })
   }
 }

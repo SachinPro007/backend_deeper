@@ -41,6 +41,17 @@ const postAddToFavourites = (req, res, next) => {
   })
 }
 
+const postRemoveFavourite = (req, res, next) => {
+  const homeId = req.params.homeId
+
+  Favourite.deleteById(homeId, (err) => {
+    if(err){
+      console.log("Someting went wrong on remove favourite home");      
+    }
+    res.redirect("/favourites")
+  })  
+}
+
 const getHomeDetail = (req, res, next) => {
   const homeId = req.params.homeId
 
@@ -52,4 +63,4 @@ const getHomeDetail = (req, res, next) => {
   })
 }
 
-module.exports = { getIndex, getHomes, getBookings, getFavourites, getHomeDetail, postAddToFavourites }
+module.exports = { getIndex, getHomes, getBookings, getFavourites, getHomeDetail, postAddToFavourites, postRemoveFavourite }

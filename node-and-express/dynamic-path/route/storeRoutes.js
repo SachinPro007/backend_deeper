@@ -1,4 +1,4 @@
-const { getHomes, getBookings, getFavourites, getIndex, getHomeDetail, postAddToFavourites } = require('../controllers/storeController')
+const { getHomes, getBookings, getFavourites, getIndex, getHomeDetail, postAddToFavourites, postRemoveFavourite } = require('../controllers/storeController')
 
 const storeRouter = require('express').Router()
 
@@ -10,5 +10,7 @@ storeRouter.get("/favourites", getFavourites)
 storeRouter.post("/favourites", postAddToFavourites)
 
 storeRouter.get("/homes/:homeId", getHomeDetail)
+
+storeRouter.post("/favourites/delete/:homeId", postRemoveFavourite)
 
 module.exports = storeRouter

@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const rootDir = require('../utils/pathUtil')
+const Favourite = require('./favourite')
 
 const fileDataPath = path.join(rootDir, "data", "homes.json")
 
@@ -49,10 +50,12 @@ class Home {
     })
   }
   
-  static delete (homeId, callBack) {
+  static deleteById (homeId, callBack) {
     Home.fetchAll((homes) => {
-      homes = homes.filter(home => home.id !== homeId)
-      fs.writeFile(fileDataPath, JSON.stringify(homes), callBack)
+      homes = homes.filter(home => home.id !== homeId)      
+      fs.writeFile(fileDataPath, JSON.stringify(homes), (err) => {
+        Favourite.deleteById(homeId, callBack)
+      })
     })
   }  
 }
