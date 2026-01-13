@@ -1,3 +1,4 @@
+const Favourite = require("../models/favourite")
 const Home = require("../models/home")
 
 const getAddHome = (req, res, next) => {
@@ -32,6 +33,7 @@ const postDeleteHome = (req, res, next) => {
     if(err){
       console.log("Something went wrong on deleting home", err);      
     }  
+    Favourite.removeFavourite(homeId, (err) => console.log("Home removed from favourites"))
     res.redirect("/host/host-home-list")  
   })
 
