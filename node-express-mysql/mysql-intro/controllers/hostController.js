@@ -4,54 +4,79 @@ const getAddHome = (req, res, next) => {
   res.render("host/edit-home", { pageTitle: "Add your Home on airbnb", editing: false })
 }
 
-const getEditHome = (req, res, next) => {
-  const homeId = req.params.homeId
-  const editing = req.query.editing === "true"  
+const getEditHome = async (req, res, next) => {
 
-  Home.findById(homeId, (home) => {
-    if(!home){
-      console.log("Home not found for editing");      
+  try {
+    const homeId = req.params.homeId
+    const editing = req.query.editing === "true"
+
+    const [[home]] = await Home.findById(homeId)
+
+    if (!home) {
+      console.log("Home not found for editing");
       return res.redirect("/host/host-home-list")
-    }    
-    res.render("host/edit-home", {pageTitle: "Edit your home details", editing, home})
-  }) 
+    }
+
+    res.render("host/edit-home", { pageTitle: "Edit your home details", editing, home })
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const postEditHome = async (req, res, next) => {
+  try {
+    const { id, houseName, description, price, rating, location, photoUrl } = req.body
+    const updateHome = new Home(id, houseName, description, price, location, rating, photoUrl)
+
+    await updateHome.save()
+
+    res.redirect("/host/host-home-list")
+
+  } catch (error) {
+    console.log(error);
+    res.redirect("/host/host-home-list")
+
+  }
+}
+
+const postDeleteHome = async (req, res, next) => {
+  try {
+    const homeId = req.params.homeId
+    await Home.deleteById(homeId)
+    res.redirect("/host/host-home-list")
+
+  } catch (error) {
+    if (err) {
+      console.log("Something went wrong on deleting home", err);
+    }
+    res.redirect("/host/host-home-list")
+  }
+
 
 }
 
-const postEditHome = (req, res, next) => {
-  const {id, houseName, price, rating, location, photoUrl} = req.body
-  const newHome = new Home(id, houseName, price, rating, location, photoUrl)
-  newHome.save()
-  
-  res.redirect("/host/host-home-list")  
-}
 
-const postDeleteHome = (req, res, next) => {
-  const homeId = req.params.homeId
-  Home.deleteById(homeId, (err) => {  
-    if(err){
-      console.log("Something went wrong on deleting home", err);      
-    } 
-    res.redirect("/host/host-home-list")  
-  })
+const postAddHome = async (req, res, next) => {
+  try {
+    const { houseName, description, price, location, rating, photoUrl } = req.body
 
-}
+    const newHome = new Home(undefined, houseName, description, price, location, rating, photoUrl)
+    await newHome.save()
+    return res.render("host/home-added", { pageTitle: "Home success page" })
 
+  } catch (error) {
+    console.log(error);
 
-const postAddHome = (req, res, next) => {
-  const { houseName, price, location, rating, photoUrl } = req.body
-  const newHome = new Home(undefined, houseName, price, location, rating, photoUrl)
-  newHome.save()
-
-  res.render("host/home-added", { pageTitle: "Home success page" })
+  }
 }
 
 
 const getHostHomes = (req, res, next) => {
-  Home.fetchAll((homes) => {
-    res.render("host/host-home-list", {pageTitle: "Host Homes List", homes})
+  Home.fetchAll().then(([homes]) => {
+    res.render("host/host-home-list", { pageTitle: "Host Homes List", homes })
   })
 }
 
 
-module.exports = {getAddHome, postAddHome, getHostHomes, getEditHome, postEditHome, postDeleteHome}
+module.exports = { getAddHome, postAddHome, getHostHomes, getEditHome, postEditHome, postDeleteHome }

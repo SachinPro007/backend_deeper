@@ -1,37 +1,21 @@
-const fs = require('fs')
-const path = require('path')
-
-const rootDir = require("../utils/pathUtil")
-
-const fileDataPath = path.join(rootDir, "data", "favourites.json")
+const db = require('../utils/databaseUtil')
 
 class Favourite {
 
-  static addFavourite(id, callBack) {
-    Favourite.getFavourites((favourites) => {
-
-      if (favourites.includes(id)) {
-        callBack("Home is already exist in favourites")
-
-      } else {
-        favourites.push(id)
-        fs.writeFile(fileDataPath, JSON.stringify(favourites), callBack)
+  static addFavourite(id) {
+    Favourite.getFavourites().then(async ([favHomes]) => {
+      if (!favHomes.includes(id)) {
+        return await db.execute("INSERT INTO favourites (homeId) VALUES (?)", [id])
       }
     })
   }
 
-  static getFavourites(callBack) {
-    fs.readFile(fileDataPath, (err, data) => {
-      callBack(!err ? JSON.parse(data) : [])
-    })
+  static getFavourites() {
+    return db.execute("SELECT * FROM favourites;")
   }
- 
-  static deleteById (id, callBack){
-    Favourite.getFavourites((favouriteHomeIds) => {
-      favouriteHomeIds = favouriteHomeIds.filter(homeId => homeId !== id)
-      
-      fs.writeFile(fileDataPath, JSON.stringify(favouriteHomeIds), callBack)
-    })
+
+  static async deleteById(id) {       
+    return db.execute("DELETE FROM favourites WHERE homeId = ?;", [id])
   }
 }
 

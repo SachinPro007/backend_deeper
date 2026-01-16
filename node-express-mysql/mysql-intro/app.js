@@ -5,10 +5,6 @@ const { pageNotFound } = require('./controllers/error')
 const storeRouter = require('./route/storeRoutes')
 const hostRouter = require('./route/hostRoutes')
 
-const db = require('./utils/databaseUtil');
-
-db.execute("SELECT houseName, price FROM homes;").then(value => console.log(value[0]))
-
 const app = express()
 
 app.use(express.static(path.join(rootDir, 'public')))
