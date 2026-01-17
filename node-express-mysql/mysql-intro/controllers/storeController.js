@@ -62,7 +62,7 @@ const postRemoveFavourite = async (req, res, next) => {
 const getHomeDetail = (req, res, next) => {
   const homeId = req.params.homeId
 
-  Home.findById(homeId, (matchHome) => {
+  Home.findById(homeId).then(matchHome => {
     if (!matchHome) {
       return res.redirect("/homes")
     }

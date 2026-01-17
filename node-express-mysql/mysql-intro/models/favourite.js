@@ -3,9 +3,11 @@ const db = require('../utils/databaseUtil')
 class Favourite {
 
   static addFavourite(id) {
-    Favourite.getFavourites().then(async ([favHomes]) => {
+    return Favourite.getFavourites().then(([favHomes]) => {
       if (!favHomes.includes(id)) {
-        return await db.execute("INSERT INTO favourites (homeId) VALUES (?)", [id])
+        return db.execute("INSERT INTO favourites (homeId) VALUES (?)", [id])
+      }else {
+        return Promise((res) => res("Home already exist in favourites"))
       }
     })
   }

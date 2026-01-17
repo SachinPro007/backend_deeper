@@ -1,5 +1,3 @@
-
-const Favourite = require('./favourite')
 const db = require('../utils/databaseUtil')
 
 
@@ -32,7 +30,8 @@ class Home {
     return db.execute("SELECT * FROM homes WHERE id = ?", [homeId])
   }
 
-  static deleteById(homeId) {
+  static async deleteById(homeId) {  
+    await db.execute("DELETE FROM favourites WHERE homeId = ?;", [homeId])  
     return db.execute("DELETE FROM homes WHERE id = ?;", [homeId])
   }
 }
