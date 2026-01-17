@@ -62,11 +62,12 @@ const postRemoveFavourite = async (req, res, next) => {
 const getHomeDetail = (req, res, next) => {
   const homeId = req.params.homeId
 
-  Home.findById(homeId).then(matchHome => {
-    if (!matchHome) {
+  Home.findById(homeId).then(([homes]) => {
+    const home = homes[0]
+    if (!home) {
       return res.redirect("/homes")
     }
-    res.render("store/home-detail", { pageTitle: "Home Detail Page", matchHome })
+    res.render("store/home-detail", { pageTitle: "Home Detail Page", matchHome: home })
   })
 }
 
