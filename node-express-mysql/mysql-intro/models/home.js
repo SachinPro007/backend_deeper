@@ -15,7 +15,7 @@ class Home {
 
   save() {    
     if(this.id){
-      return db.execute(`UPDATE homes SET houseName = ?, description = ?, price = ?, location = ?, rating = ?, photoUrl = ? WHERE id = ${this.id};`, [this.houseName, this.description, this.price, this.location, this.rating, this.photoUrl])
+      return db.execute(`UPDATE homes SET houseName = ?, description = ?, price = ?, location = ?, rating = ?, photoUrl = ? WHERE id = ?;`, [this.houseName, this.description, this.price, this.location, this.rating, this.photoUrl, this.id])
 
     }else{
       return db.execute("INSERT INTO homes (houseName, description, price, location, rating, photoUrl) VALUES (?, ?, ?, ?, ?, ?)", [this.houseName, this.description, this.price, this.location, this.rating, this.photoUrl])
