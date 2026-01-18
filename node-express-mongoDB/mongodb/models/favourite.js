@@ -1,11 +1,18 @@
 const { ObjectId } = require('mongodb')
-const {getDb} = require('../utils/databaseUtil')
+const { getDb } = require('../utils/databaseUtil')
 
 class Favourite {
 
-  static addFavourite(id) {    
+  static addFavourite(id) {
     const db = getDb()
-    return db.collection("favourites").insertOne({homeId: new ObjectId(String(id))})
+    console.log(id);
+
+    return db.collection("favourites").findOne({ homeId: id }).then(existFav => {
+      if (!existFav) {
+        return db.collection("favourites").insertOne({ homeId: id })
+      }
+      return Promise.resolve()
+    })
   }
 
   static getFavourites() {
@@ -13,9 +20,9 @@ class Favourite {
     return db.collection("favourites").find().toArray()
   }
 
-  static async deleteById(id) {        
-    const db = getDb()   
-    return db.collection("favourites").deleteOne({homeId: new ObjectId(String(id))})
+  static async deleteById(id) {
+    const db = getDb()
+    return db.collection("favourites").deleteOne({ homeId: id})
   }
 }
 

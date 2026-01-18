@@ -23,7 +23,7 @@ const getBookings = (req, res, next) => {
 const getFavourites = (req, res, next) => {
   Home.fetchAll().then((homes) => {
     Favourite.getFavourites().then((favourites) => {
-      const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId.equals(home._id)))      
+      const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId === home._id.toString()))      
       res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: getFavHomes })
     })
   })
@@ -33,26 +33,25 @@ const getFavourites = (req, res, next) => {
 const postAddToFavourites = async (req, res, next) => {
 
   try {
-    await Favourite.addFavourite(req.body.id) 
+    await Favourite.addFavourite(req.body.id)
 
   } catch (error) {
     console.log(error);
-  }finally{
+  } finally {
     res.redirect("/favourites")
-
   }
 }
 
 const postRemoveFavourite = async (req, res, next) => {
   try {
-    const homeId = req.params.homeId    
-    await Favourite.deleteById(homeId)   
+    const homeId = req.params.homeId
+    await Favourite.deleteById(homeId)
 
   } catch (error) {
     if (error) {
       console.log("Someting went wrong on remove favourite home", error);
-    }    
-  }finally{
+    }
+  } finally {
     res.redirect("/favourites")
   }
 }
@@ -60,9 +59,9 @@ const postRemoveFavourite = async (req, res, next) => {
 const getHomeDetail = (req, res, next) => {
   const homeId = req.params.homeId
 
-  Home.findById(homeId).then((home) => {  
+  Home.findById(homeId).then((home) => {
     console.log(home);
-      
+
     if (!home) {
       return res.redirect("/homes")
     }
