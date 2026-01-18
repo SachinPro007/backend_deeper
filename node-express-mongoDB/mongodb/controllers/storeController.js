@@ -12,7 +12,6 @@ const getHomes = (req, res, next) => {
   Home.fetchAll().then((homes) => {
     res.render("store/home-list", { pageTitle: "airbnb homes list", homes })
   })
-
 }
 
 
@@ -22,9 +21,9 @@ const getBookings = (req, res, next) => {
 
 
 const getFavourites = (req, res, next) => {
-  Home.fetchAll().then(([homes]) => {
-    Favourite.getFavourites().then(([favourites]) => {
-      const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId === home._id))
+  Home.fetchAll().then((homes) => {
+    Favourite.getFavourites().then((favourites) => {
+      const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId.equals(home._id)))      
       res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: getFavHomes })
     })
   })
@@ -34,7 +33,7 @@ const getFavourites = (req, res, next) => {
 const postAddToFavourites = async (req, res, next) => {
 
   try {
-    Favourite.addFavourite(req.body.id)
+    await Favourite.addFavourite(req.body.id)    
     res.redirect("/favourites")
 
   } catch (error) {
@@ -46,8 +45,8 @@ const postAddToFavourites = async (req, res, next) => {
 
 const postRemoveFavourite = async (req, res, next) => {
   try {
-    const homeId = req.params.homeId
-    await Favourite.deleteById(homeId)
+    const homeId = req.params.homeId    
+    await Favourite.deleteById(homeId)    
 
     res.redirect("/favourites")
 

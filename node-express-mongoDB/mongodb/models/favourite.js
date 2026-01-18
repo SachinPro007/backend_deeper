@@ -1,23 +1,21 @@
-const db = require('../utils/databaseUtil')
+const { ObjectId } = require('mongodb')
+const {getDb} = require('../utils/databaseUtil')
 
 class Favourite {
 
-  static addFavourite(id) {
-    return Favourite.getFavourites().then(([favHomes]) => {
-      if (!favHomes.includes(id)) {
-        return db.execute("INSERT INTO favourites (homeId) VALUES (?)", [id])
-      }else {
-        return Promise((res) => res("Home already exist in favourites"))
-      }
-    })
+  static addFavourite(id) {    
+    const db = getDb()
+    return db.collection("favourites").insertOne({homeId: new ObjectId(String(id))})
   }
 
   static getFavourites() {
-    return db.execute("SELECT * FROM favourites;")
+    const db = getDb()
+    return db.collection("favourites").find().toArray()
   }
 
-  static async deleteById(id) {       
-    return db.execute("DELETE FROM favourites WHERE homeId = ?;", [id])
+  static async deleteById(id) {        
+    const db = getDb()   
+    return db.collection("favourites").deleteOne({homeId: new ObjectId(String(id))})
   }
 }
 

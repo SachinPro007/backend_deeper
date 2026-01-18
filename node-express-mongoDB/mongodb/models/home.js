@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
-const { getDb } = require('../utils/databaseUtil')
+const { getDb } = require('../utils/databaseUtil');
+const Favourite = require('./favourite');
 
 
 
@@ -43,8 +44,9 @@ class Home {
     return db.collection("homes").find({_id: new ObjectId(String(homeId))}).next()
   }
 
-  static deleteById(homeId) {
+  static async deleteById(homeId) {
     const db = getDb()
+    await Favourite.deleteById(homeId)
     return db.collection("homes").deleteOne({_id: new ObjectId(String(homeId))})
   }
 }
