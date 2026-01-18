@@ -31,12 +31,10 @@ const postEditHome = async (req, res, next) => {
 
     await updateHome.save()
 
-    res.redirect("/host/host-home-list")
-
   } catch (error) {
-    console.log(error);
+    console.log(error);    
+  }finally{
     res.redirect("/host/host-home-list")
-
   }
 }
 
@@ -44,12 +42,12 @@ const postDeleteHome = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
     await Home.deleteById(homeId)
-    res.redirect("/host/host-home-list")
 
   } catch (err) {
     if (err) {
       console.log("Something went wrong on deleting home", err);
     }
+  }finally{
     res.redirect("/host/host-home-list")
   }
 

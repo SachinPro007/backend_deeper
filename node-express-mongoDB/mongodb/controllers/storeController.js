@@ -33,27 +33,26 @@ const getFavourites = (req, res, next) => {
 const postAddToFavourites = async (req, res, next) => {
 
   try {
-    await Favourite.addFavourite(req.body.id)    
-    res.redirect("/favourites")
+    await Favourite.addFavourite(req.body.id) 
 
   } catch (error) {
     console.log(error);
-
+  }finally{
     res.redirect("/favourites")
+
   }
 }
 
 const postRemoveFavourite = async (req, res, next) => {
   try {
     const homeId = req.params.homeId    
-    await Favourite.deleteById(homeId)    
-
-    res.redirect("/favourites")
+    await Favourite.deleteById(homeId)   
 
   } catch (error) {
     if (error) {
       console.log("Someting went wrong on remove favourite home", error);
-    }
+    }    
+  }finally{
     res.redirect("/favourites")
   }
 }
