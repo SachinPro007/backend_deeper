@@ -1,33 +1,51 @@
+const { ObjectId } = require('mongodb');
 const { getDb } = require('../utils/databaseUtil')
 
 
 
 class Home {
-  constructor(houseName, description, price, location, rating, photoUrl) {
+  constructor(houseName, description, price, location, rating, photoUrl, _id) {
     this.houseName = houseName;
     this.description = description;
     this.price = price;
     this.location = location;
     this.rating = rating;
     this.photoUrl = photoUrl
+    if(_id){
+      this._id = _id
+    }
   }
 
   save() {
-    const db = getDb()
-    return db.collection("homes").insertOne(this)
+    const db = getDb()    
+    if(!this._id){
+      return db.collection("homes").insertOne(this)      
+    }else{
+      const updatedHome = {
+        houseName: this.houseName,
+        description: this.description,
+        price: this.price,
+        location: this.location,
+        rating: this.rating,
+        photoUrl: this.photoUrl,
+      }
+      return db.collection("homes").updateOne({_id: new ObjectId(String(this._id))}, {$set: updatedHome})
+    }
   }
 
   static fetchAll() {
-    return db.execute("SELECT * FROM homes")
+    const db = getDb()
+    return db.collection("homes").find().toArray()
   }
 
-  static findById(homeId) {
-    return db.execute("SELECT * FROM homes WHERE id = ?", [homeId])
+  static async findById(homeId) {
+    const db = getDb()
+    return db.collection("homes").find({_id: new ObjectId(String(homeId))}).next()
   }
 
-  static async deleteById(homeId) {
-    await db.execute("DELETE FROM favourites WHERE homeId = ?;", [homeId])
-    return db.execute("DELETE FROM homes WHERE id = ?;", [homeId])
+  static deleteById(homeId) {
+    const db = getDb()
+    return db.collection("homes").deleteOne({_id: new ObjectId(String(homeId))})
   }
 }
 

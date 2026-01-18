@@ -10,7 +10,7 @@ const getEditHome = async (req, res, next) => {
     const homeId = req.params.homeId
     const editing = req.query.editing === "true"
 
-    const [[home]] = await Home.findById(homeId)
+    const home = await Home.findById(homeId)
 
     if (!home) {
       console.log("Home not found for editing");
@@ -26,8 +26,8 @@ const getEditHome = async (req, res, next) => {
 
 const postEditHome = async (req, res, next) => {
   try {
-    const { id, houseName, description, price, rating, location, photoUrl } = req.body
-    const updateHome = new Home(id, houseName, description, price, location, rating, photoUrl)
+    const { id, houseName, description, price, rating, location, photoUrl } = req.body    
+    const updateHome = new Home(houseName, description, price, location, rating, photoUrl, id)
 
     await updateHome.save()
 
@@ -46,7 +46,7 @@ const postDeleteHome = async (req, res, next) => {
     await Home.deleteById(homeId)
     res.redirect("/host/host-home-list")
 
-  } catch (error) {
+  } catch (err) {
     if (err) {
       console.log("Something went wrong on deleting home", err);
     }
@@ -73,7 +73,7 @@ const postAddHome = async (req, res, next) => {
 
 
 const getHostHomes = (req, res, next) => {
-  Home.fetchAll().then(([homes]) => {
+  Home.fetchAll().then((homes) => {
     res.render("host/host-home-list", { pageTitle: "Host Homes List", homes })
   })
 }

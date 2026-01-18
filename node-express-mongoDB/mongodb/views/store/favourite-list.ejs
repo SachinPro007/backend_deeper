@@ -66,10 +66,10 @@
                       </div>
 
                       <div>
-                        <a href="/homes/<%= home.id %>"
+                        <a href="/homes/<%= home._id %>"
                           class="bg-blue-600 text-white font-medium text-sm rounded-lg px-3 py-2">Detail</a>
 
-                        <form action="/favourites/delete/<%= home.id %>" method="post">
+                        <form action="/favourites/delete/<%= home._id %>" method="post">
                           <button type="submit"
                             class="bg-red-600 text-white font-medium text-sm rounded-lg px-3 py-2">Remove</button>
                         </form>

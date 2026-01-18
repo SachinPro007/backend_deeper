@@ -70,11 +70,11 @@
                                             </div>
 
                                             <div>
-                                                <a href="/host/edit-home/<%= home.id %>?editing=true"
+                                                <a href="/host/edit-home/<%= home._id %>?editing=true"
                                                     class="bg-green-600 text-white font-medium text-sm rounded-lg px-3 py-2">Edit</a>
                                                 
                                                 
-                                                <form action="/host/delete-home/<%= home.id %>" method="post">
+                                                <form action="/host/delete-home/<%= home._id %>" method="post">
                                                     <button type="submit"
                                                     class="bg-red-600 text-white font-medium text-sm rounded-lg px-3 py-2">Delete</button>
                                                 </form>
