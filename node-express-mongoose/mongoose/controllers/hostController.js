@@ -1,3 +1,4 @@
+const Favourite = require("../models/favourite")
 const Home = require("../models/home")
 
 const getAddHome = (req, res, next) => {
@@ -46,6 +47,7 @@ const postDeleteHome = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
     await Home.deleteOne({_id: homeId})
+    await Favourite.deleteOne({homeId})
 
   } catch (err) {
     if (err) {

@@ -22,7 +22,7 @@ const getBookings = (req, res, next) => {
 
 const getFavourites = (req, res, next) => {
   Home.find().then((homes) => {
-    Favourite.getFavourites().then((favourites) => {
+    Favourite.find().then((favourites) => {
       const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId === home._id.toString()))      
       res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: getFavHomes })
     })
@@ -32,8 +32,15 @@ const getFavourites = (req, res, next) => {
 
 const postAddToFavourites = async (req, res, next) => {
 
-  try {
-    await Favourite.addFavourite(req.body.id)
+  try { 
+    const exist = await Favourite.findOne({homeId: req.body.id})
+    if(exist){
+      console.log("Home exist in favourites");
+      return;      
+    }
+    
+    const newFavourite = new Favourite({homeId: req.body.id})
+    await newFavourite.save()
 
   } catch (error) {
     console.log(error);
@@ -45,7 +52,7 @@ const postAddToFavourites = async (req, res, next) => {
 const postRemoveFavourite = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
-    await Favourite.deleteById(homeId)
+    await Favourite.deleteOne({homeId})
 
   } catch (error) {
     if (error) {
