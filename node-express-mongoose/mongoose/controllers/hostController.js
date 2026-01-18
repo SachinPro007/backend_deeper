@@ -10,7 +10,7 @@ const getEditHome = async (req, res, next) => {
     const homeId = req.params.homeId
     const editing = req.query.editing === "true"
 
-    const home = await Home.findById(homeId)
+    const home = await Home.findOne({_id: homeId})
 
     if (!home) {
       console.log("Home not found for editing");
@@ -26,28 +26,32 @@ const getEditHome = async (req, res, next) => {
 
 const postEditHome = async (req, res, next) => {
   try {
-    const { id, houseName, description, price, rating, location, photoUrl } = req.body    
-    const updateHome = new Home(houseName, description, price, location, rating, photoUrl, id)
+    const { id, houseName, description, price, rating, location, photoUrl } = req.body
+    const updatedHome = { houseName, description, price, rating, location, photoUrl }
 
-    await updateHome.save()
+    await Home.updateOne({_id: id}, updatedHome)
 
   } catch (error) {
-    console.log(error);    
-  }finally{
+    console.log(error);
+
+
+  } finally {
     res.redirect("/host/host-home-list")
   }
+
+
 }
 
 const postDeleteHome = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
-    await Home.deleteById(homeId)
+    await Home.deleteOne({_id: homeId})
 
   } catch (err) {
     if (err) {
       console.log("Something went wrong on deleting home", err);
     }
-  }finally{
+  } finally {
     res.redirect("/host/host-home-list")
   }
 
@@ -59,19 +63,18 @@ const postAddHome = async (req, res, next) => {
   try {
     const { houseName, description, price, location, rating, photoUrl } = req.body
 
-    const newHome = new Home(houseName, description, price, location, rating, photoUrl)
+    const newHome = new Home({ houseName, description, price, location, rating, photoUrl })
     await newHome.save()
     return res.render("host/home-added", { pageTitle: "Home success page" })
 
   } catch (error) {
     console.log(error);
-
   }
 }
 
 
 const getHostHomes = (req, res, next) => {
-  Home.fetchAll().then((homes) => {
+  Home.find().then((homes) => {
     res.render("host/host-home-list", { pageTitle: "Host Homes List", homes })
   })
 }

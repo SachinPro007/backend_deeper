@@ -1,4 +1,4 @@
-const { getDb } = require('../utils/databaseUtil')
+
 
 class Favourite {
 
