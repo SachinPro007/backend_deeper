@@ -47,7 +47,6 @@ const postDeleteHome = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
     await Home.deleteOne({_id: homeId})
-    await Favourite.deleteOne({homeId})
 
   } catch (err) {
     if (err) {
@@ -56,8 +55,6 @@ const postDeleteHome = async (req, res, next) => {
   } finally {
     res.redirect("/host/host-home-list")
   }
-
-
 }
 
 
