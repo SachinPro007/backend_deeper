@@ -21,25 +21,23 @@ const getBookings = (req, res, next) => {
 
 
 const getFavourites = (req, res, next) => {
-  Home.find().then((homes) => {
-    Favourite.find().then((favourites) => {
-      const getFavHomes = homes.filter(home => favourites.some(fav => fav.homeId === home._id.toString()))      
-      res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: getFavHomes })
-    })
+  Favourite.find().populate("homeId").then((favourites) => {
+    const favHomes = favourites.map(fav => fav.homeId)
+    res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: favHomes })
   })
 }
 
 
 const postAddToFavourites = async (req, res, next) => {
 
-  try { 
-    const exist = await Favourite.findOne({homeId: req.body.id})
-    if(exist){
+  try {
+    const exist = await Favourite.findOne({ homeId: req.body.id })
+    if (exist) {
       console.log("Home exist in favourites");
-      return;      
+      return;
     }
-    
-    const newFavourite = new Favourite({homeId: req.body.id})
+
+    const newFavourite = new Favourite({ homeId: req.body.id })
     await newFavourite.save()
 
   } catch (error) {
@@ -52,7 +50,7 @@ const postAddToFavourites = async (req, res, next) => {
 const postRemoveFavourite = async (req, res, next) => {
   try {
     const homeId = req.params.homeId
-    await Favourite.deleteOne({homeId})
+    await Favourite.deleteOne({ homeId })
 
   } catch (error) {
     if (error) {
@@ -66,7 +64,7 @@ const postRemoveFavourite = async (req, res, next) => {
 const getHomeDetail = (req, res, next) => {
   const homeId = req.params.homeId
 
-  Home.findOne({_id: homeId}).then((home) => {
+  Home.findOne({ _id: homeId }).then((home) => {
 
     if (!home) {
       return res.redirect("/homes")
