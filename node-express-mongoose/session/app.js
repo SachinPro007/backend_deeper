@@ -1,5 +1,13 @@
-const express = require('express')
+// core module
 const path = require('path')
+
+
+// external modules
+const express = require('express')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
+
+// local module
 const rootDir = require('./utils/pathUtil')
 const { pageNotFound } = require('./controllers/error')
 const storeRouter = require('./route/storeRoutes')
@@ -9,31 +17,57 @@ const authRouter = require('./route/authRoutes')
 
 const app = express()
 
-app.use(express.static(path.join(rootDir, 'public')))
-app.use(express.urlencoded())
 
+// ejs setup
 app.set('view engine', 'ejs');
 app.set("views", "views")
 
 
+// middlewares
+app.use(express.static(path.join(rootDir, 'public')))
+app.use(express.urlencoded())
+
+
+// session middleware
+const db_url = "mongodb+srv://root:root@prashantsir.a6optiz.mongodb.net/airbnb?appName=PrashantSir";
+
+const store = new MongoDBStore({
+  uri: db_url,
+  collection: "sessions"
+})
+
+
+app.use(session({
+  secret: "here is my strong secret key",
+  resave: false,
+  saveUninitialized: true,
+  store: store
+
+}))
+
+
+
 // routes
 app.use(authRouter)
-app.use((req, res, next) => {
-  req.isLoggedIn = req.get("cookie")?.split("=")[1] === "true" || false;  
+app.use((req, res, next) => {  
+  console.log(req.session);
+  
+  req.isLoggedIn = req.session.isLoggedIn || false; 
   req.isLoggedIn ? next() : res.redirect("/login");
 })
 app.use("/host", hostRouter)
 app.use(storeRouter)
 
-
+// 404 page
 app.use(pageNotFound)
 
 
-const db_url = "mongodb+srv://root:root@prashantsir.a6optiz.mongodb.net/airbnb?appName=PrashantSir";
+// connect mongoose and run server
+const PORT = 3000;
 mongoose.connect(db_url).then(() => {
   console.log("MongoDb Connected");
-  app.listen(3000, () => {
-    console.log(`server runing on port: 3000`);
+  app.listen(PORT, () => {
+    console.log(`server runing on port: ${PORT}`);
   })  
 }).catch((err) => {
   console.log("Error while connecting to Mongodb", err);  

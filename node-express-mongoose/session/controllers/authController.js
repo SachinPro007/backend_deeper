@@ -5,14 +5,18 @@ const getLogin = (req, res, next) => {
 
 const postLogin = (req, res, next) => {
   console.log(req.body);
-  res.cookie("isLoggedIn", true)
+  req.session.isLoggedIn = true;
+  // res.cookie("isLoggedIn", true);
+  // reqisLoggedIn = true;
 
   res.redirect("/homes")  
 }
 
 const postLogout = (req, res, next) => {
+  req.session.isLoggedIn = false
   // res.clearCookie("isLoggedIn")
-  res.cookie("isLoggedIn", false)
+  // res.cookie("isLoggedIn", false)
+
   res.redirect("/")
 }
 
