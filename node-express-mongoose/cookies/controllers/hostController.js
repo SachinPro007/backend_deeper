@@ -2,7 +2,7 @@ const Favourite = require("../models/favourite")
 const Home = require("../models/home")
 
 const getAddHome = (req, res, next) => {
-  res.render("host/edit-home", { pageTitle: "Add your Home on airbnb", editing: false })
+  res.render("host/edit-home", { pageTitle: "Add your Home on airbnb", editing: false, isLoggedIn: req.isLoggedIn })
 }
 
 const getEditHome = async (req, res, next) => {
@@ -18,7 +18,7 @@ const getEditHome = async (req, res, next) => {
       return res.redirect("/host/host-home-list")
     }
 
-    res.render("host/edit-home", { pageTitle: "Edit your home details", editing, home })
+    res.render("host/edit-home", { pageTitle: "Edit your home details", editing, home, isLoggedIn: req.isLoggedIn })
 
   } catch (error) {
     console.log(error);
@@ -64,7 +64,7 @@ const postAddHome = async (req, res, next) => {
 
     const newHome = new Home({ houseName, description, price, location, rating, photoUrl })
     await newHome.save()
-    return res.render("host/home-added", { pageTitle: "Home success page" })
+    return res.render("host/home-added", { pageTitle: "Home success page", isLoggedIn: req.isLoggedIn })
 
   } catch (error) {
     console.log(error);
@@ -74,7 +74,7 @@ const postAddHome = async (req, res, next) => {
 
 const getHostHomes = (req, res, next) => {
   Home.find().then((homes) => {
-    res.render("host/host-home-list", { pageTitle: "Host Homes List", homes })
+    res.render("host/host-home-list", { pageTitle: "Host Homes List", homes, isLoggedIn: req.isLoggedIn })
   })
 }
 

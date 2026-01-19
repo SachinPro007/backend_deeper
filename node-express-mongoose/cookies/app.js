@@ -5,6 +5,7 @@ const { pageNotFound } = require('./controllers/error')
 const storeRouter = require('./route/storeRoutes')
 const hostRouter = require('./route/hostRoutes')
 const { default: mongoose } = require('mongoose')
+const authRouter = require('./route/authRoutes')
 
 const app = express()
 
@@ -16,6 +17,11 @@ app.set("views", "views")
 
 
 // routes
+app.use(authRouter)
+app.use((req, res, next) => {
+  req.isLoggedIn = req.get("cookie")?.split("=")[1] === "true" || false;  
+  req.isLoggedIn ? next() : res.redirect("/login");
+})
 app.use("/host", hostRouter)
 app.use(storeRouter)
 

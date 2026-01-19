@@ -230,9 +230,6 @@
   .relative {
     position: relative;
   }
-  .static {
-    position: static;
-  }
   .sticky {
     position: sticky;
   }
@@ -376,9 +373,6 @@
   }
   .h-75 {
     height: calc(var(--spacing) * 75);
-  }
-  .h-\[300px\] {
-    height: 300px;
   }
   .h-full {
     height: 100%;
@@ -1099,11 +1093,6 @@
   .md\:h-112\.5 {
     @media (width >= 48rem) {
       height: calc(var(--spacing) * 112.5);
-    }
-  }
-  .md\:h-\[450px\] {
-    @media (width >= 48rem) {
-      height: 450px;
     }
   }
   .md\:grid-cols-3 {

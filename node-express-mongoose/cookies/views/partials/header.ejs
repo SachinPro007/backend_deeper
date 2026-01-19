@@ -14,39 +14,56 @@
           class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
           Home
         </a>
-        <a href="/favourites"
-          class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
-          Favourite List
-        </a>
-        <a href="/bookings"
-          class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
-          Bookings
-        </a>
+        <% if(isLoggedIn){ %>
+          <a href="/favourites"
+            class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
+            Favourite List
+          </a>
+          <a href="/bookings"
+            class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
+            Bookings
+          </a>
+        <% } %>
 
         <!-- Host Dropdown -->
-        <div class="relative group">
-          <a href="#"
-            class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium flex items-center whitespace-nowrap">
-            Host
-            <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180 shrink-0" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
+        <% if(!isLoggedIn){ %>
+          <a href="/login"
+            class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            Login
           </a>
-          <div
-            class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-            <div class="py-2">
-              <a href="/host/edit-home"
-                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                Edit Home
-              </a>
-              <a href="/host/host-home-list"
-                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                Host Home List
-              </a>
+
+        <% } else {%>
+          <div class="relative group">
+            <a href="#"
+              class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium flex items-center whitespace-nowrap">
+              Host
+              <svg class="w-4 h-4 ml-1 transition-transform group-hover:rotate-180 shrink-0" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </a>
+            <div
+              class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div class="py-2">
+                <form action="/logout" method="POST">
+                  <button 
+                    type="submit" 
+                    class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    Logout
+                  </button>
+                </form>     
+
+                <a href="/host/host-home-list"
+                  class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  Host Home List
+                </a>
+              </div>
             </div>
           </div>
-        </div>
+
+        <% }%>
+
+        
       </div>
 
       <!-- Mobile Menu Toggle -->
