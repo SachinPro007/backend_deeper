@@ -28,7 +28,7 @@ app.use(express.static(path.join(rootDir, 'public')))
 app.use(express.urlencoded())
 
 
-// session middleware
+// create session or store mongoDB
 const db_url = "mongodb+srv://root:root@prashantsir.a6optiz.mongodb.net/airbnb?appName=PrashantSir";
 
 const store = new MongoDBStore({
@@ -42,17 +42,14 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: store
-
 }))
 
 
 
 // routes
 app.use(authRouter)
-app.use((req, res, next) => {  
-  console.log(req.session);
-  
-  req.isLoggedIn = req.session.isLoggedIn || false; 
+app.use((req, res, next) => {
+  req.isLoggedIn = req.session.isLoggedIn || false;
   req.isLoggedIn ? next() : res.redirect("/login");
 })
 app.use("/host", hostRouter)
@@ -68,7 +65,7 @@ mongoose.connect(db_url).then(() => {
   console.log("MongoDb Connected");
   app.listen(PORT, () => {
     console.log(`server runing on port: ${PORT}`);
-  })  
+  })
 }).catch((err) => {
-  console.log("Error while connecting to Mongodb", err);  
+  console.log("Error while connecting to Mongodb", err);
 })

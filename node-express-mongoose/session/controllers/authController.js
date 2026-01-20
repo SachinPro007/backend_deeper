@@ -4,7 +4,6 @@ const getLogin = (req, res, next) => {
 
 
 const postLogin = (req, res, next) => {
-  console.log(req.body);
   req.session.isLoggedIn = true;
   // res.cookie("isLoggedIn", true);
   // reqisLoggedIn = true;
@@ -13,11 +12,12 @@ const postLogin = (req, res, next) => {
 }
 
 const postLogout = (req, res, next) => {
-  req.session.isLoggedIn = false
+  // req.session.isLoggedIn = false
   // res.clearCookie("isLoggedIn")
   // res.cookie("isLoggedIn", false)
-
-  res.redirect("/")
+  req.session.destroy(() => {
+    res.redirect("/login")
+  })
 }
 
 
