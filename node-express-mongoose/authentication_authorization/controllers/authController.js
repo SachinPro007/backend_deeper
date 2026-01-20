@@ -21,4 +21,14 @@ const postLogout = (req, res, next) => {
 }
 
 
-module.exports = {getLogin, postLogin, postLogout}
+const getSignup = (req, res, next) => {
+  res.render("auth/signup", {pageTitle: "Create Account", isLoggedIn: false})
+}
+
+const postSignup = (req, res, next) => {
+  console.log(req.body);
+  res.redirect("/login")  
+}
+
+
+module.exports = {getLogin, postLogin, postLogout, getSignup, postSignup}

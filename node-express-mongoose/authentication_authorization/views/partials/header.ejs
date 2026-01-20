@@ -27,10 +27,16 @@
 
         <!-- Host Dropdown -->
         <% if(!isLoggedIn){ %>
-          <a href="/login"
-            class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-            Login
-          </a>
+          <div>
+            <a href="/login"
+              class="px-2 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              Login
+            </a>/
+            <a href="/signup"
+              class="px-2 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+              Signup
+            </a>
+          </div>
 
         <% } else {%>
           <div class="relative group">
