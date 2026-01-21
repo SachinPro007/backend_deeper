@@ -1,19 +1,64 @@
 const { check, validationResult } = require('express-validator')
+const bcript = require('bcryptjs')
 
 const User = require('../models/user')
 
 const getLogin = (req, res, next) => {
-  res.render("auth/login", { pageTitle: "Login Form", isLoggedIn: false })
+  res.render("auth/login", { pageTitle: "Login Form", isLoggedIn: false, errorMessages: undefined, oldInput: undefined })
 }
 
 
-const postLogin = (req, res, next) => {
-  req.session.isLoggedIn = true;
-  // res.cookie("isLoggedIn", true);
-  // reqisLoggedIn = true;
+const postLogin = [
+  check("email")
+    .notEmpty().withMessage("Email is required")
+    .isEmail().withMessage("Invalid email format")
+    .normalizeEmail(),
 
-  res.redirect("/homes")
-}
+  check("password")
+    .notEmpty().withMessage("Password is required"),
+
+
+
+  async (req, res, next) => {
+    const { email, password } = req.body
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      return res.render("auth/login", {
+        pageTitle: "Login Form",
+        isLoggedIn: false,
+        errorMessages: errors.array().map(err => err.msg),
+        oldInput: {email}
+      })
+    }
+
+    try {
+      const user = await User.findOne({ email })
+      if (!user) {
+        return res.render("auth/login", {
+          pageTitle: "Login Form",
+          isLoggedIn: false,
+          errorMessages: ["User does not exist"],
+          oldInput: {email}
+        })
+      }
+      
+      req.session.isLoggedIn = true
+      return res.redirect("/homes")
+
+
+
+    } catch (error) {
+      return res.render("auth/login", {
+        pageTitle: "Login Form",
+        isLoggedIn: false,
+        errorMessages: [error],
+        oldInput: {email}
+      })
+
+    }
+  }
+]
 
 const postLogout = (req, res, next) => {
   // req.session.isLoggedIn = false
@@ -87,8 +132,11 @@ const postSignup = [
       })
     }
 
-    const newUser = new User({ firstName, lastName, email, role, password })
-    newUser.save()
+
+    bcript.hash(password, 12).then(hashedPassword => {
+      const newUser = new User({ firstName, lastName, email, role, password: hashedPassword })
+      return newUser.save()
+    })
       .then(() => {
         res.redirect("/login")
       })
