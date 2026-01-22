@@ -1,5 +1,6 @@
 const Favourite = require("../models/favourite")
 const Home = require("../models/home")
+const User = require("../models/user")
 
 const getIndex = (req, res, next) => {
   Home.find().then((homes) => {
@@ -34,7 +35,14 @@ const getBookings = (req, res, next) => {
 }
 
 
-const getFavourites = (req, res, next) => {
+const getFavourites = async (req, res, next) => {
+  const user = await User.findOne({_id: req.user._id}).populate("favourites")
+  console.log(user);
+  const fav = await Favourite.find().populate("homeId")
+  console.log(fav);
+  
+
+  
   Favourite.find().populate("homeId").then((favourites) => {
     const favHomes = favourites.map(fav => fav.homeId)
     res.render("store/favourite-list", { 
