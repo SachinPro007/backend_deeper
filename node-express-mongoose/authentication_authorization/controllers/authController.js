@@ -4,7 +4,13 @@ const bcript = require('bcryptjs')
 const User = require('../models/user')
 
 const getLogin = (req, res, next) => {
-  res.render("auth/login", { pageTitle: "Login Form", isLoggedIn: false, errorMessages: undefined, oldInput: undefined })
+  res.render("auth/login", { 
+    pageTitle: "Login Form", 
+    isLoggedIn: false, 
+    user: {}, 
+    errorMessages: undefined, 
+    oldInput: undefined 
+  })
 }
 
 
@@ -23,12 +29,14 @@ const postLogin = [
     const { email, password } = req.body
     const errors = validationResult(req)
 
+
     if (!errors.isEmpty()) {
       return res.render("auth/login", {
         pageTitle: "Login Form",
         isLoggedIn: false,
         errorMessages: errors.array().map(err => err.msg),
-        oldInput: {email}
+        oldInput: { email },
+        user: {},
       })
     }
 
@@ -39,21 +47,39 @@ const postLogin = [
           pageTitle: "Login Form",
           isLoggedIn: false,
           errorMessages: ["User does not exist"],
-          oldInput: {email}
+          oldInput: { email },
+          user: {},
         })
       }
-      
+
+      const isMatch = await bcript.compare(password, user.password)
+
+      if (!isMatch) {
+        return res.render("auth/login", {
+          pageTitle: "Login Form",
+          isLoggedIn: false,
+          errorMessages: ["Invalid Password"],
+          oldInput: { email },
+          user: {},
+        })
+      }
+
+
       req.session.isLoggedIn = true
+      req.session.user = user;
+      await req.session.save()
+
       return res.redirect("/homes")
 
-
-
     } catch (error) {
+      console.log(error);
+
       return res.render("auth/login", {
         pageTitle: "Login Form",
         isLoggedIn: false,
+        user: {},
         errorMessages: [error],
-        oldInput: {email}
+        oldInput: { email }
       })
 
     }
@@ -71,7 +97,13 @@ const postLogout = (req, res, next) => {
 
 
 const getSignup = (req, res, next) => {
-  res.render("auth/signup", { pageTitle: "Create Account", isLoggedIn: false, oldData: undefined, errorMessages: undefined })
+  res.render("auth/signup", { 
+    pageTitle: "Create Account", 
+    isLoggedIn: false, 
+    oldData: undefined, 
+    errorMessages: undefined,
+    user: {},
+  })
 }
 
 const postSignup = [
@@ -128,7 +160,8 @@ const postSignup = [
         pageTitle: "Create Account",
         isLoggedIn: false,
         errorMessages: errors.array().map(err => err.msg),
-        oldData: req.body
+        oldData: req.body,
+        user: {},
       })
     }
 
@@ -145,7 +178,8 @@ const postSignup = [
           pageTitle: "Create Account",
           isLoggedIn: false,
           errorMessages: [err.message],
-          oldData: req.body
+          oldData: req.body,
+          user: {},
         })
       })
   }

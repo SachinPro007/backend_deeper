@@ -48,8 +48,9 @@ app.use(session({
 
 // routes
 app.use(authRouter)
-app.use((req, res, next) => {
+app.use((req, res, next) => {  
   req.isLoggedIn = req.session.isLoggedIn || false;
+  req.user = req.session.user || undefined;
   req.isLoggedIn ? next() : res.redirect("/login");
 })
 app.use("/host", hostRouter)

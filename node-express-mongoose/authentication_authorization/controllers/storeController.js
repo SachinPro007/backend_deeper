@@ -3,27 +3,46 @@ const Home = require("../models/home")
 
 const getIndex = (req, res, next) => {
   Home.find().then((homes) => {
-    res.render("store/index", { pageTitle: "Welcome to airbnb", homes, isLoggedIn: req.isLoggedIn })
+    res.render("store/index", { 
+      pageTitle: "Welcome to airbnb", 
+      homes, 
+      isLoggedIn: req.isLoggedIn, 
+      user: req.user 
+    })
   })
 }
 
 
-const getHomes = (req, res, next) => {
+const getHomes = (req, res, next) => {  
   Home.find().then((homes) => {
-    res.render("store/home-list", { pageTitle: "airbnb homes list", homes, isLoggedIn: req.isLoggedIn })
+    res.render("store/home-list", { 
+      pageTitle: "Airbnb homes list", 
+      homes, 
+      isLoggedIn: req.isLoggedIn, 
+      user: req.user 
+    })
   })
 }
 
 
 const getBookings = (req, res, next) => {
-  res.render("store/bookings", { pageTitle: "All Booked Homes", isLoggedIn: req.isLoggedIn })
+  res.render("store/bookings", { 
+    pageTitle: "All Booked Homes", 
+    isLoggedIn: req.isLoggedIn, 
+    user: req.user 
+  })
 }
 
 
 const getFavourites = (req, res, next) => {
   Favourite.find().populate("homeId").then((favourites) => {
     const favHomes = favourites.map(fav => fav.homeId)
-    res.render("store/favourite-list", { pageTitle: "Favourite Homes List", homes: favHomes, isLoggedIn: req.isLoggedIn })
+    res.render("store/favourite-list", { 
+      pageTitle: "Favourite Homes List", 
+      homes: favHomes, 
+      isLoggedIn: req.isLoggedIn, 
+      user: req.user 
+    })
   })
 }
 
@@ -69,7 +88,14 @@ const getHomeDetail = (req, res, next) => {
     if (!home) {
       return res.redirect("/homes")
     }
-    res.render("store/home-detail", { pageTitle: "Home Detail Page", matchHome: home, isLoggedIn: req.isLoggedIn })
+    res.render("store/home-detail", { 
+      pageTitle: "Home Detail Page", 
+      matchHome: home, 
+      isLoggedIn: req.isLoggedIn, 
+      user: req.user 
+    })
+  }).catch(err => {
+    return res.redirect("/homes")
   })
 }
 

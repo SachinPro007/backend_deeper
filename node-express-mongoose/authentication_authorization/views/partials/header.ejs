@@ -14,7 +14,7 @@
           class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
           Home
         </a>
-        <% if(isLoggedIn){ %>
+        <% if(isLoggedIn && user && user.role === "guest"){ %>      
           <a href="/favourites"
             class="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium whitespace-nowrap">
             Favourite List
@@ -57,12 +57,16 @@
                     class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     Logout
                   </button>
-                </form>     
+                </form> 
+                
+                
+                <% if(user && user.role !== "guest"){ %>  
+                  <a href="/host/host-home-list"
+                    class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    Host Home List
+                  </a>
+                <% } %> 
 
-                <a href="/host/host-home-list"
-                  class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                  Host Home List
-                </a>
               </div>
             </div>
           </div>
