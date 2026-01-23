@@ -1,5 +1,4 @@
 const { default: mongoose } = require("mongoose");
-const Favourite = require("./favourite");
 
 
 const homeSchema = new mongoose.Schema({
