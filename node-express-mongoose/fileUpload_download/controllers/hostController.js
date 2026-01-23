@@ -38,8 +38,8 @@ const getEditHome = async (req, res, next) => {
 
 const postEditHome = async (req, res, next) => {
   try {
-    const { id, houseName, description, price, rating, location, photoUrl } = req.body
-    const updatedHome = { houseName, description, price, rating, location, photoUrl }
+    const { id, houseName, description, price, rating, location, photo } = req.body
+    const updatedHome = { houseName, description, price, rating, location, photo }
 
     await Home.updateOne({_id: id}, updatedHome)
 
@@ -71,9 +71,11 @@ const postDeleteHome = async (req, res, next) => {
 
 const postAddHome = async (req, res, next) => {
   try {
-    const { houseName, description, price, location, rating, photoUrl } = req.body
+    console.log(req.body);
+    
+    const { houseName, description, price, location, rating, photo } = req.body
 
-    const newHome = new Home({ houseName, description, price, location, rating, photoUrl })
+    const newHome = new Home({ houseName, description, price, location, rating, photo })
     await newHome.save()
     return res.render("host/home-added", { 
       pageTitle: "Home success page", 
