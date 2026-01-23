@@ -14,6 +14,7 @@ const storeRouter = require('./route/storeRoutes')
 const hostRouter = require('./route/hostRoutes')
 const { default: mongoose } = require('mongoose')
 const authRouter = require('./route/authRoutes')
+const { hostProtect } = require('./controllers/hostController')
 
 const app = express()
 
@@ -53,7 +54,7 @@ app.use((req, res, next) => {
   req.user = req.session.user || undefined;
   req.isLoggedIn ? next() : res.redirect("/login");
 })
-app.use("/host", hostRouter)
+app.use("/host", hostProtect, hostRouter)
 app.use(storeRouter)
 
 // 404 page

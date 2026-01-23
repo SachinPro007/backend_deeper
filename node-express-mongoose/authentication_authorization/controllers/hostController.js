@@ -99,4 +99,15 @@ const getHostHomes = (req, res, next) => {
 }
 
 
-module.exports = { getAddHome, postAddHome, getHostHomes, getEditHome, postEditHome, postDeleteHome }
+
+const hostProtect = (req, res, next) => {
+  const userType = req.user.role;
+  
+  if(userType === "host"){
+    next()  
+  }else{
+    return res.redirect("/")
+  }
+}
+
+module.exports = { getAddHome, postAddHome, getHostHomes, getEditHome, postEditHome, postDeleteHome, hostProtect }
