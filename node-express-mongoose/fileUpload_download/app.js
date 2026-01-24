@@ -6,6 +6,7 @@ const path = require('path')
 const express = require('express')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
+const multer = require('multer')
 
 // local module
 const rootDir = require('./utils/pathUtil')
@@ -27,6 +28,7 @@ app.set("views", "views")
 // middlewares
 app.use(express.static(path.join(rootDir, 'public')))
 app.use(express.urlencoded())
+app.use(multer().single("photo"))
 
 
 // create session or store mongoDB

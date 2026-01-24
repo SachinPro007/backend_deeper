@@ -10,9 +10,9 @@ const homeSchema = new mongoose.Schema({
   photo: String,
 })
 
-homeSchema.pre("deleteOne", async function() {
-  const {_id} = this.getQuery()
-  await Favourite.deleteOne({homeId: _id}) 
-})
+// homeSchema.pre("deleteOne", async function() {
+//   const {_id} = this.getQuery()
+//   await Favourite.deleteOne({homeId: _id}) 
+// })
 
 module.exports = mongoose.model("Home", homeSchema)

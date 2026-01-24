@@ -72,6 +72,8 @@ const postDeleteHome = async (req, res, next) => {
 const postAddHome = async (req, res, next) => {
   try {
     console.log(req.body);
+    console.log(req.file);
+    
     
     const { houseName, description, price, location, rating, photo } = req.body
 
