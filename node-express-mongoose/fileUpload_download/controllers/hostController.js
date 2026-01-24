@@ -38,20 +38,19 @@ const getEditHome = async (req, res, next) => {
 
 const postEditHome = async (req, res, next) => {
   try {
-    const { id, houseName, description, price, rating, location, photo } = req.body
-    const updatedHome = { houseName, description, price, rating, location, photo }
+    const { id, houseName, description, price, rating, location } = req.body
+    const updatedHome = { houseName, description, price, rating, location };
+    if(req.file){
+      updatedHome.photo = `/${req.file.path}`
+    }    
 
     await Home.updateOne({_id: id}, updatedHome)
 
   } catch (error) {
     console.log(error);
-
-
   } finally {
     res.redirect("/host/host-home-list")
   }
-
-
 }
 
 const postDeleteHome = async (req, res, next) => {
@@ -71,14 +70,12 @@ const postDeleteHome = async (req, res, next) => {
 
 const postAddHome = async (req, res, next) => {
   try {
-    console.log(req.body);
-    console.log(req.file);
-    
-    
-    const { houseName, description, price, location, rating, photo } = req.body
+    const photoPath = req.file ? `/${req.file.path}` : "/uploads/default-home.jpg";    
+    const { houseName, description, price, location, rating } = req.body
 
-    const newHome = new Home({ houseName, description, price, location, rating, photo })
+    const newHome = new Home({ houseName, description, price, location, rating, photo: photoPath })
     await newHome.save()
+    
     return res.render("host/home-added", { 
       pageTitle: "Home success page", 
       isLoggedIn: req.isLoggedIn, 

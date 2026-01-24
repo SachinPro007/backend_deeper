@@ -16,23 +16,50 @@ const hostRouter = require('./route/hostRoutes')
 const { default: mongoose } = require('mongoose')
 const authRouter = require('./route/authRoutes')
 const { hostProtect } = require('./controllers/hostController')
+const { randomString } = require('./utils/helper')
 
 const app = express()
 
 
-// ejs setup
+// ejs setup for view engine
 app.set('view engine', 'ejs');
 app.set("views", "views")
 
 
 // middlewares
 app.use(express.static(path.join(rootDir, 'public')))
+app.use("/uploads", express.static(path.join(rootDir, 'uploads')))
 app.use(express.urlencoded())
-app.use(multer().single("photo"))
+
+
+
+// multer middleware for file upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/')
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, randomString(10) + "-" + file.originalname)
+  }
+})
+
+const fileFilter = (req, file, cb) => {
+  if (["image/png", "image/jpg", "image/jpeg", "image/webp"].includes(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(null, false)
+  }
+}
+
+const multerOpthins = { storage, fileFilter }
+
+app.use(multer(multerOpthins).single("photo"))
+// app.use(multer({dest: "uploads/"}).single("photo"))
 
 
 // create session or store mongoDB
-const db_url = "mongodb+srv://root:root@prashantsir.a6optiz.mongodb.net/airbnb?appName=PrashantSir";
+const db_url = "mongodb+srv://sachinsehrawat:CjskBVgfeXVFmvs4@cluster007.me2texx.mongodb.net/?appName=airbnb";
 
 const store = new MongoDBStore({
   uri: db_url,
