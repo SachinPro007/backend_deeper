@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { addItemToServer } from "./services/itemService";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -8,14 +9,11 @@ const TodoApp = () => {
   const [editInput, setEditInput] = useState("");
 
   /////////////////// functions ///////////
+  
 
-  const addTodo = () => {
+  const addTodo = async () => {
     if (inputValue.trim() !== "") {
-      const newTodo = {
-        id: Date.now(),
-        text: inputValue,
-        completed: false,
-      };
+      const newTodo = await addItemToServer(inputValue);      
       setTodos([newTodo, ...todos]);
       setInputValue("");
     }
@@ -63,10 +61,10 @@ const TodoApp = () => {
   const totalCount = todos.length;
 
   return (
-    <div className=" flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className=" flex justify-center items-center min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="container md:w-[60%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 relative">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-700 p-6 relative">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-white text-center">
@@ -151,7 +149,7 @@ const TodoApp = () => {
             <ul className="divide-y divide-gray-200">
               {filteredTodos.map((todo) => (
                 <li
-                  key={todo.id}
+                  key={todo._id}
                   className="px-6 py-4 hover:bg-gray-50 transition-colors duration-150"
                 >
                   <div className="flex items-center justify-between">

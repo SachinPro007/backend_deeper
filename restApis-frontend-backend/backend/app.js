@@ -4,9 +4,12 @@ const path = require('path')
 // External modules
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 // local module
 const rootDir = require('./utils/pathUtil')
+const pageNotFound = require('./controllers/errors')
+const todoItemsRouter = require('./routes/todosItemRoute')
 
 
 
@@ -16,14 +19,13 @@ const app = express()
 // middlewares
 app.use(express.urlencoded())
 app.use(express.static(path.join(rootDir, "public")))
+app.use(express.json())
+app.use(cors())
 
 
 
-app.use((req, res, next) => {
-  console.log(req.url, req.method);
-  res.json({name: "Sachin Sehrawat", role: "Mern Stack Developer", age: 23})  
-})
-
+app.use("/api/todos", todoItemsRouter)
+app.use(pageNotFound)
 
 
 const PORT = 3000;
