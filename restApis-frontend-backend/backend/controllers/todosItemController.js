@@ -21,4 +21,10 @@ const postCreateItem = async (req, res, next) => {
   }
 }
 
-module.exports = {getItems, postCreateItem}
+const deleteItem = async (req, res, next) => {
+  const itemId = req.params.id
+  await TodoModel.deleteOne({_id: itemId})
+  res.status(204).end()  
+}
+
+module.exports = {getItems, postCreateItem, deleteItem}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { addItemToServer } from "./services/itemService";
+import React, { useState, useEffect } from "react";
+import { addItemToServer, deleteItemFromServer, getItemsFromServer } from "./services/itemService";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -9,6 +9,13 @@ const TodoApp = () => {
   const [editInput, setEditInput] = useState("");
 
   /////////////////// functions ///////////
+
+  useEffect(() => {
+    (async () => {
+      const allTodoItems = await getItemsFromServer()
+      setTodos(allTodoItems.todos)      
+    })()
+  }, [])
   
 
   const addTodo = async () => {
@@ -25,8 +32,12 @@ const TodoApp = () => {
     ));
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = async (id) => {
+    const res = await deleteItemFromServer(id)
+    if(res){
+      setTodos(todos.filter((todo) => todo._id !== id));
+    }
+    
   };
 
   // Start editing a todo
@@ -251,7 +262,7 @@ const TodoApp = () => {
                         </button>
                       )}
                       <button
-                        onClick={() => deleteTodo(todo.id)}
+                        onClick={() => deleteTodo(todo._id)}
                         className="text-gray-400 hover:text-red-500 transition-colors duration-200 p-1 rounded cursor-pointer"
                       >
                         <svg

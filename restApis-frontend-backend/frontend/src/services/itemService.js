@@ -1,11 +1,13 @@
+const baseUrl = "http://localhost:3000/api/todos";
+
 const getItemsFromServer = async () => {
-  const response = await fetch("http://localhost:3000/api/todos")
+  const response = await fetch(baseUrl)
   return response.json()
 }
 
 
 const addItemToServer = async (text) => {  
-  const res = await fetch("http://localhost:3000/api/todos", {
+  const res = await fetch(baseUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -18,4 +20,12 @@ const addItemToServer = async (text) => {
 }
 
 
-export {getItemsFromServer, addItemToServer}
+const deleteItemFromServer = async (itemId) => {
+  const response = await fetch(`${baseUrl}/${itemId}`, {
+    method: "DELETE",
+  })  
+  return response.ok   
+}
+
+
+export {getItemsFromServer, addItemToServer, deleteItemFromServer}
