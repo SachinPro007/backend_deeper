@@ -27,4 +27,16 @@ const deleteItem = async (req, res, next) => {
   res.status(204).end()  
 }
 
-module.exports = {getItems, postCreateItem, deleteItem}
+
+const updateItem = async (req, res, next) => {
+  const itemId = req.params.id;
+  const {text, completed} = req.body;  
+
+  const updatedItem = await TodoModel.updateOne({_id: itemId}, {text, completed})   
+  res.status(201).json({item: updatedItem, message: "Item update successfully"})
+}
+
+
+
+
+module.exports = {getItems, postCreateItem, deleteItem, updateItem}

@@ -27,5 +27,29 @@ const deleteItemFromServer = async (itemId) => {
   return response.ok   
 }
 
+const updateItemFromServer = async ({id, text}) => {  
+  
+  const response = await fetch(`${baseUrl}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({text})
+  })
 
-export {getItemsFromServer, addItemToServer, deleteItemFromServer}
+  return response.ok  
+}
+
+const toggleItemOnServer = async ({id, completed}) => {
+  const response = await fetch(`${baseUrl}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({completed: !completed})
+  })
+
+  return response.ok
+}
+
+export {getItemsFromServer, addItemToServer, deleteItemFromServer, updateItemFromServer, toggleItemOnServer}

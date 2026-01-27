@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addItemToServer, deleteItemFromServer, getItemsFromServer } from "./services/itemService";
+import { addItemToServer, deleteItemFromServer, getItemsFromServer, toggleItemOnServer, updateItemFromServer } from "./services/itemService";
 
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
@@ -26,10 +26,14 @@ const TodoApp = () => {
     }
   };
 
-  const toggleTodo = (id, completed) => {
-    setTodos(todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !completed } : todo
-    ));
+  const toggleTodo = async (id, completed) => {
+    const res = await toggleItemOnServer({id, completed})
+    if(res){
+      setTodos(todos.map((todo) =>
+        todo._id === id ? { ...todo, completed: !completed } : todo
+      ));
+    }
+
   };
 
   const deleteTodo = async (id) => {
@@ -42,17 +46,19 @@ const TodoApp = () => {
 
   // Start editing a todo
   const startEdit = (todo) => {
-    setEditingId(todo.id);
+    setEditingId(todo._id);
     setEditInput(todo.text);
   };
 
   // Save the edited todo
   const saveEdit = async (id) => {
-    if (editInput.trim() !== "") {      
-      const updatedTodo = todos.find(todo => todo.id === id);
-      setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
-      setEditingId(null);
-      setEditInput("");
+    if (editInput.trim() !== "") {    
+      const res = await updateItemFromServer({id, text: editInput})
+      if(res){
+        setTodos(todos.map(todo => todo._id === id ? {...todo, text: editInput} : todo));
+        setEditingId(null);
+        setEditInput("");
+      }
     }
   };
 
@@ -166,7 +172,7 @@ const TodoApp = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3 flex-1">
                       <button
-                        onClick={() => toggleTodo(todo.id, todo.completed)}
+                        onClick={() => toggleTodo(todo._id, todo.completed)}
                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200 cursor-pointer ${
                           todo.completed
                             ? "bg-green-500 border-green-500 text-white"
@@ -191,19 +197,19 @@ const TodoApp = () => {
                       </button>
 
                       {/* Edit Mode vs View Mode */}
-                      {editingId === todo.id ? (
+                      {editingId === todo._id ? (
                         <div className="flex-1 flex gap-2">
                           <input
                             value={editInput}
                             onChange={(e) => setEditInput(e.target.value)}
                             onKeyPress={(e) =>
-                              e.key === "Enter" && saveEdit(todo.id)
+                              e.key === "Enter" && saveEdit(todo._id)
                             }
                             className="flex-1 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-black"
                           />
                           <div className="flex gap-1">
                             <button
-                              onClick={() => saveEdit(todo.id)}
+                              onClick={() => saveEdit(todo._id)}
                               className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 cursor-pointer"
                             >
                               Save
